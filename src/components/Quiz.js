@@ -1,11 +1,30 @@
 import { useContext } from "react";
 import Question from "./Question";
 import { QuizContext } from "../context/quiz";
+import { useEffect } from "react";
 
 const Quiz = () => {
   const [quizState, dispatch] = useContext(QuizContext); // подписка на глобальный state
-  // console.log('state', quizState);
+  const apiURL = 'https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986';
+  // const getAllquestion = async (url) => {
+  //   const res = await fetch(url);
+  //   const data = await res.json();
+  //   console.log(data);
+  //   console.log(data.results);
+  //   return data.results;
+  // }
+  
   const {quetions, currentQuestionIndex, showResults, correctAnswersCount} = quizState;
+  useEffect(() => {
+    if(quetions.length > 0) {
+      return;
+    }
+    fetch(apiURL).then(res => res.json()).then(data => {
+      console.log('data', data);
+      dispatch({type: 'LOADED_QUESTION', payload: data.results})
+    })
+  })
+  console.log('state', quizState);
 
   return (
     <div className="quiz">
@@ -22,7 +41,7 @@ const Quiz = () => {
           </div>
         )
       }
-      {!showResults &&
+      {!showResults && quizState.quetions.length > 0 &&
         (<div>
           <div className="score">Question {currentQuestionIndex + 1}/{quetions.length}</div>
           <Question />

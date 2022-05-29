@@ -1,14 +1,13 @@
 // QuizProvider - это компонент, который будет предоставлять наши глобальные данные 
 import { createContext, useReducer } from 'react';
-import quetions from "../data";
-import { shuffleAnswers } from '../helpers';
+import { shuffleAnswers, normalizeQuestions } from '../helpers';
 
 
 const initialState = {
-    quetions,
+    quetions: [],
     currentQuestionIndex: 0,
     showResults: false,
-    answers: shuffleAnswers(quetions[0]),
+    answers: [],
     currentAnswer: '',
     correctAnswersCount: 0,
 };
@@ -39,6 +38,15 @@ const reducer = (state, action) => {
         }
         case 'RESTART': {
             return initialState;
+        }
+        case 'LOADED_QUESTION': {
+            console.log('LOADED_QUESTION', action.payload);
+            const normalizedQuestions = normalizeQuestions(action.payload);
+            return {
+                ...state,
+                quetions: normalizedQuestions,
+                answers: shuffleAnswers(normalizedQuestions[0]),
+            }
         }
         default: {
             return state;
