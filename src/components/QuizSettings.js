@@ -4,8 +4,73 @@ import { QuizContext } from "../context/quiz";
 
 const QuizSettings = () => {
 
+    const dictionaryCategories = [
+        {'Any Category': '10'},
+        {'General Knowledge': '9'},
+        {'Entertainment: Film' : '11'},
+        {'Entertainment: Music': '12'},
+        {'Entertainment: Musicals & Theatres': '13'},
+        {'Entertainment: Television': '14'},
+        {'Entertainment: Video Games': '15'},
+        {'Entertainment: Board Games': '16'},
+        {'Science & Nature': '17'},
+        {'Science: Computers': '18'},
+        {'Science: Mathematics': '19'},
+        {'Mythology': '20'},
+        {'Sports': '21'},
+        {'Geography': '22'},
+        {'History': '23'},
+        {'Politics': '24'},
+        {'Art': '25'},
+        {'Celebrities': '26'},
+        {'Animals': '27'},
+        {'Vehicles': '28'},
+        {'Entertainment: Comics': '29'},
+        {'Science: Gadgets': '30'},
+        {'Entertainment: Japanese Anime & Manga': '31'},
+        {'Entertainment: Cartoon & Animations': '32'},
+    ]
+
+    const dictionaryDifficulty = [
+        {'Any Difficulty': ''}, 
+        {Easy: 'easy'}, 
+        {Medium: 'medium'}, 
+        {Hard: 'hard'}
+    ]
+
+    const elementsCategories = dictionaryCategories.map((item, i) => {
+        const keys = Object.keys(item);
+        const values = Object.values(item);
+        return (
+            <option value={values}
+                    key={i}>{keys}</option>
+        )
+    })
+
+    const elementsDifficulty = dictionaryDifficulty.map((item, i) => {
+        const keys = Object.keys(item);
+        const values = Object.values(item);
+        return (
+            <option value={values}
+                    key={i}>{keys}</option>
+        )
+    })
+    // const elementsCategories = elementsOption(dictionaryCategories)
+    // const elementsDifficulty = elementsOption(dictionaryDifficulty)
+
     const [quizState, dispatch] = useContext(QuizContext);
 
+    const fetchData = ({numberQustions, category, difficulty}) => {
+        const categoryURL = category !== '' ? `&category=${category}` : '';
+        const difficultyURL = difficulty !== '' ? `&difficulty=${difficulty}` : '';
+        const apiURLNew = `https://opentdb.com/api.php?amount=${numberQustions}${categoryURL}${difficultyURL}&type=multiple&encode=url3986`;
+
+        fetch(apiURLNew).then(res => res.json()).then(data => {
+            // console.log('data', data);
+            dispatch({type: 'LOADED_QUESTION', payload: data.results});
+        })
+    }
+        
     
     return (
         <div>
@@ -24,6 +89,7 @@ const QuizSettings = () => {
                     // console.log(values);
                     
                     dispatch({type: 'SETTING_SUBMIT', payload: values})
+                    fetchData(values)
                 }}>
 
                     <Form>
@@ -47,30 +113,7 @@ const QuizSettings = () => {
                             // multiple={true}
                             className='setting setting-list'
                         >
-                            <option value="10">Any Category</option>
-                            <option value="9">General Knowledge</option>
-                            <option value="11">Entertainment: Film</option>
-                            <option value="12">Entertainment: Music</option>
-                            <option value="13">Entertainment: Musicals & Theatres</option>
-                            <option value="14">Entertainment: Television</option>
-                            <option value="15">Entertainment: Video Games</option>
-                            <option value="16">Entertainment: Board Games</option>
-                            <option value="17">Science & Nature</option>
-                            <option value="18">Science: Computers</option>
-                            <option value="19">Science: Mathematics</option>
-                            <option value="20">Mythology</option>
-                            <option value="21">Sports</option>
-                            <option value="22">Geography</option>
-                            <option value="23">History</option>
-                            <option value="24">Politics</option>
-                            <option value="25">Art</option>
-                            <option value="26">Celebrities</option>
-                            <option value="27">Animals</option>
-                            <option value="28">Vehicles</option>
-                            <option value="29">Entertainment: Comics</option>
-                            <option value="30">Science: Gadgets</option>
-                            <option value="31">Entertainment: Japanese Anime & Manga</option>
-                            <option value="32">Entertainment: Cartoon & Animations</option>
+                            {elementsCategories}
                         </Field> 
 
                         <label htmlFor="location">Select Difficulty:</label>
@@ -81,10 +124,11 @@ const QuizSettings = () => {
                             // multiple={true}
                             className='setting setting-list'
                         >
-                            <option value="Any Difficulty">Any Difficulty</option>
+                            {elementsDifficulty}
+                            {/* <option value="Any Difficulty">Any Difficulty</option>
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
+                            <option value="hard">Hard</option> */}
                         </Field> 
                         <button type="submit"
                                 className="next-button">Submit</button>

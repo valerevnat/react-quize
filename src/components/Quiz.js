@@ -1,32 +1,13 @@
 import { useContext } from "react";
 import Question from "./Question";
 import { QuizContext } from "../context/quiz";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import QuizSettings from "./QuizSettings";
 
 const Quiz = () => {
 
   const [quizState, dispatch] = useContext(QuizContext); // подписка на глобальный state
-  const {quetions, currentQuestionIndex, showResults, correctAnswersCount, numberQustions, category, difficulty, loaded} = quizState;
-
-  const categoryURL = category !== '' ? `&category=${category}` : '';
-  const difficultyURL = difficulty !== '' ? `&difficulty=${difficulty}` : '';
-
-  const apiURLNew = `https://opentdb.com/api.php?amount=${numberQustions}${categoryURL}${difficultyURL}&type=multiple&encode=url3986`;
-  // console.log(apiURLNew);
-  
-
-  useEffect(() => {
-    if(numberQustions === '7') {
-      return;
-    }
-    fetch(apiURLNew).then(res => res.json()).then(data => {
-      console.log('data', data);
-      dispatch({type: 'LOADED_QUESTION', payload: data.results})
-    })
-  }, [numberQustions]);
-  
-  // Added dependency in useEffect and functionality (selection of the number of questions, categories and difficulty)
+  const {quetions, currentQuestionIndex, showResults, correctAnswersCount, loaded} = quizState;
 
   return (
     <div className="quiz">
