@@ -13,24 +13,26 @@ const Quiz = () => {
   const difficultyURL = difficulty !== '' ? `&difficulty=${difficulty}` : '';
 
   const apiURLNew = `https://opentdb.com/api.php?amount=${numberQustions}${categoryURL}${difficultyURL}&type=multiple&encode=url3986`;
+  // console.log(apiURLNew);
   
 
   useEffect(() => {
-    if(quetions.length > 0) {
+    if(numberQustions === '7') {
       return;
     }
     fetch(apiURLNew).then(res => res.json()).then(data => {
       console.log('data', data);
       dispatch({type: 'LOADED_QUESTION', payload: data.results})
     })
-  });
+  }, [numberQustions]);
   
+  // Added dependency in useEffect and functionality (selection of the number of questions, categories and difficulty)
 
   return (
     <div className="quiz">
       {!loaded &&
         <QuizSettings />}
-      
+      {/* <QuizSettings /> */}
       {showResults && loaded &&
         (
           <div className="results">

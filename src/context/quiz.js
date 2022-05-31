@@ -10,7 +10,7 @@ const initialState = {
     answers: [],
     currentAnswer: '',
     correctAnswersCount: 0,
-    numberQustions: '8',
+    numberQustions: '7',
     category: '10',
     difficulty: '',
     loaded: false
@@ -58,6 +58,7 @@ const reducer = (state, action) => {
             const numberQustions = action.payload.numberQustions;
             const category = action.payload.category;
             const difficulty = action.payload.difficulty;
+            
             console.log('SETTING_SUBMIT', action.payload);
             return {
                 ...state,

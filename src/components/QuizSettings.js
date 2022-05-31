@@ -5,8 +5,6 @@ import { QuizContext } from "../context/quiz";
 const QuizSettings = () => {
 
     const [quizState, dispatch] = useContext(QuizContext);
-    const {numberQustions, category, difficulty} = quizState;
-    console.log('Данные из values', numberQustions, category, difficulty);
 
     
     return (
