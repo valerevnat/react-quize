@@ -10,10 +10,15 @@ const initialState = {
     answers: [],
     currentAnswer: '',
     correctAnswersCount: 0,
+    numberQustions: '8',
+    category: '10',
+    difficulty: '',
+    loaded: false
+
 };
 
 const reducer = (state, action) => {
-    console.log('reducer', state, action);
+    // console.log('reducer', state, action);
 
     switch(action.type) {
         case 'SELECT_ANSWER': {
@@ -46,6 +51,20 @@ const reducer = (state, action) => {
                 ...state,
                 quetions: normalizedQuestions,
                 answers: shuffleAnswers(normalizedQuestions[0]),
+            }
+        }
+        case 'SETTING_SUBMIT': {
+            // console.log('SETTING_SUBMIT', action.payload);
+            const numberQustions = action.payload.numberQustions;
+            const category = action.payload.category;
+            const difficulty = action.payload.difficulty;
+            console.log('SETTING_SUBMIT', action.payload);
+            return {
+                ...state,
+                numberQustions,
+                category,
+                difficulty,
+                loaded: true,
             }
         }
         default: {

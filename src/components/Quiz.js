@@ -2,33 +2,36 @@ import { useContext } from "react";
 import Question from "./Question";
 import { QuizContext } from "../context/quiz";
 import { useEffect } from "react";
+import QuizSettings from "./QuizSettings";
 
 const Quiz = () => {
+
   const [quizState, dispatch] = useContext(QuizContext); // подписка на глобальный state
-  const apiURL = 'https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986';
-  // const getAllquestion = async (url) => {
-  //   const res = await fetch(url);
-  //   const data = await res.json();
-  //   console.log(data);
-  //   console.log(data.results);
-  //   return data.results;
-  // }
+  const {quetions, currentQuestionIndex, showResults, correctAnswersCount, numberQustions, category, difficulty, loaded} = quizState;
+
+  const categoryURL = category !== '' ? `&category=${category}` : '';
+  const difficultyURL = difficulty !== '' ? `&difficulty=${difficulty}` : '';
+
+  const apiURLNew = `https://opentdb.com/api.php?amount=${numberQustions}${categoryURL}${difficultyURL}&type=multiple&encode=url3986`;
   
-  const {quetions, currentQuestionIndex, showResults, correctAnswersCount} = quizState;
+
   useEffect(() => {
     if(quetions.length > 0) {
       return;
     }
-    fetch(apiURL).then(res => res.json()).then(data => {
+    fetch(apiURLNew).then(res => res.json()).then(data => {
       console.log('data', data);
       dispatch({type: 'LOADED_QUESTION', payload: data.results})
     })
-  })
-  console.log('state', quizState);
+  });
+  
 
   return (
     <div className="quiz">
-      {showResults &&
+      {!loaded &&
+        <QuizSettings />}
+      
+      {showResults && loaded &&
         (
           <div className="results">
             <div className="congratulations">Congratulations</div>
@@ -41,7 +44,7 @@ const Quiz = () => {
           </div>
         )
       }
-      {!showResults && quizState.quetions.length > 0 &&
+      {!showResults && quizState.quetions.length > 0 && loaded &&
         (<div>
           <div className="score">Question {currentQuestionIndex + 1}/{quetions.length}</div>
           <Question />
